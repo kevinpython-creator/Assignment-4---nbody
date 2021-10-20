@@ -14,6 +14,7 @@
 #define _USE_MATH_DEFINES // https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=msvc-160
 #include <cmath>
 #include <iostream>
+#include <ctime>
 
 
 // these values are constant and not allowed to be changed
@@ -100,10 +101,11 @@ void advance(body state[BODIES_COUNT], double dt) {
      */
     // 2D array (to hold: BODIES_COUNT x BODIES_COUNT elements)
     vector3d rij[BODIES_COUNT][BODIES_COUNT];
-
+//    In this forloop combinations of bodies are made
     for (unsigned int i = 0; i < BODIES_COUNT; ++i) {
         for (unsigned int j = i + 1; j < BODIES_COUNT; ++j) {
             rij[i][j] = state[i].position - state[j].position;
+//            std::cout << i << "and" << j << std::endl;
         }
     }
 
@@ -247,12 +249,17 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     } else {
         const unsigned int n = atoi(argv[1]);
+        std::clock_t start;
+        double duration;
+        start = std::clock();
         offset_momentum(state);
         std::cout << energy(state) << std::endl;
         for (int i = 0; i < n; ++i) {
             advance(state, 0.01);
         }
         std::cout << energy(state) << std::endl;
+        duration = (std::clock() - start)/(double) CLOCKS_PER_SEC;
+        std::cout << "the runtime is: " << duration << std::endl;
         return EXIT_SUCCESS;
     }
 }
