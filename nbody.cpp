@@ -15,6 +15,8 @@
 #include <cmath>
 #include <iostream>
 #include <ctime>
+#include <fstream>
+#include <format>
 
 
 // these values are constant and not allowed to be changed
@@ -105,7 +107,6 @@ void advance(body state[BODIES_COUNT], double dt) {
     for (unsigned int i = 0; i < BODIES_COUNT; ++i) {
         for (unsigned int j = i + 1; j < BODIES_COUNT; ++j) {
             rij[i][j] = state[i].position - state[j].position;
-//            std::cout << i << "and" << j << std::endl;
         }
     }
 
@@ -135,6 +136,11 @@ void advance(body state[BODIES_COUNT], double dt) {
      */
     for (unsigned int i = 0; i < BODIES_COUNT; ++i) {
         state[i].position += state[i].velocity * dt;
+//         get information about position advancements and name
+        std::ofstream MyFile("c++3Dpos.csv", std::ios_base::app);
+
+        MyFile << std::format("{}, {}, {}, {};\n", state[i].name,state[i].position.x, state[i].position.y, state[i].position.z);
+        MyFile.close();
     }
 }
 
@@ -252,6 +258,13 @@ int main(int argc, char **argv) {
         std::clock_t start;
         double duration;
         start = std::clock();
+        std::ofstream MyFile("c++3Dpos.csv");
+        MyFile << "bodyname, x-coordinate, y-coordinate, z-coordinate\n";
+        for (int i = 0; i<BODIES_COUNT; ++i) {
+            MyFile << std::format("{}, {}, {}, {};\n", state[i].name,state[i].position.x, state[i].position.y, state[i].position.z);
+        }
+
+        MyFile.close();
         offset_momentum(state);
         std::cout << energy(state) << std::endl;
         for (int i = 0; i < n; ++i) {
@@ -259,7 +272,7 @@ int main(int argc, char **argv) {
         }
         std::cout << energy(state) << std::endl;
         duration = (std::clock() - start)/(double) CLOCKS_PER_SEC;
-        std::cout << "the runtime is: " << duration << std::endl;
+        std::cout << "the runtime is: " << duration << " seconds" << std::endl;
         return EXIT_SUCCESS;
     }
 }
