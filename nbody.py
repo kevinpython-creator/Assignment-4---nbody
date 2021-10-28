@@ -96,7 +96,7 @@ def advance(dt, n, bodies=SYSTEM, pairs=PAIRS):
             x = r[0]
             y = r[1]
             z = r[2]
-            text = "{}, {}, {}, {}, {};\n".format(name, x, y, z, i+1)
+            text = "{}, {}, {}, {};\n".format(name, x, y, z,)
             with open("py3Dpos.csv", "a") as file:
                 file.write(text)
             count += 1
@@ -125,10 +125,9 @@ def offset_momentum(ref, bodies=SYSTEM, px=0.0, py=0.0, pz=0.0):
 
 
 def main(n, ref="sun"):
-    colnames = "{}, {}, {}, {};\n".format("bodyname", "x-coordinate", "y-coordinate", "z-coordinate")
+    colnames = "{}, {}, {}, {};\n".format("bodyname", "x-coordinate", "y-coordinate", "z-coordinate",)
     with open("py3Dpos.csv","w") as file:
         file.write(colnames)
-        file.write("-----------original values\n")
         for i in list(BODIES):
             text = "{}, {}, {}, {};\n".format(i, BODIES[i][0][0], BODIES[i][0][0], BODIES[i][0][0])
             file.write(text)
@@ -143,7 +142,7 @@ if __name__ == "__main__":
         t_start = perf_counter()
         main(int(sys.argv[1]))
         t_stop = perf_counter()
-        print(t_stop - t_start)
+        print("the runtime is: {} seconds".format(t_stop - t_start))
         sys.exit(0)
     else:
         print(f"This is {sys.argv[0]}")
